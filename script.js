@@ -129,7 +129,7 @@
       stopInstallAuto();
       installTimer = setInterval(function () {
         showInstall((installIdx + 1) % installSlides.length);
-      }, 4000);
+      }, 3000);
     };
 
     installTabs.forEach(function (tab, n) {
@@ -142,22 +142,72 @@
     startInstallAuto();
   }
 
-  // background parallax on odd sections
-  var bgEls = document.querySelectorAll('main > section:nth-of-type(odd)');
-  if (bgEls.length && !reduced) {
-    var ticking = false;
-    var updateParallax = function () {
-      bgEls.forEach(function (el) {
-        var shift = Math.max(-30, Math.min(30, el.getBoundingClientRect().top * .08));
-        el.style.setProperty('--bg-shift', shift.toFixed(2) + 'px');
+  // scroll-pinned steps: while .steps-stage is stuck, scrolling swaps the panel
+  // in place rather than moving it
+  var stepsScroll = document.querySelector('.steps-scroll');
+  if (stepsScroll) {
+    var stepsStage = stepsScroll.querySelector('.steps-stage');
+    var stepPanels = stepsScroll.querySelectorAll('.step-panel');
+    var stepDots = stepsScroll.querySelectorAll('.step-dot');
+    var stepsFill = stepsScroll.querySelector('.steps-rail-fill');
+    var stepCount = stepPanels.length;
+    var stepCurrent = 0;
+    var stepsTicking = false;
+
+    var setStep = function (i) {
+      if (i === stepCurrent) return;
+      stepCurrent = i;
+      stepPanels.forEach(function (p, n) {
+        // side is derived from position in the sequence, not travel direction,
+        // so going back animates as the exact reverse of going forward
+        p.classList.toggle('is-active', n === i);
+        p.classList.toggle('is-prev', n < i);
+        p.classList.toggle('is-next', n > i);
       });
-      ticking = false;
+      stepDots.forEach(function (d, n) {
+        d.classList.toggle('is-active', n === i);
+        if (n === i) { d.setAttribute('aria-current', 'true'); }
+        else { d.removeAttribute('aria-current'); }
+      });
     };
+
+    // how far we are through the pinned stretch, 0..1 (-1 when not pinning,
+    // i.e. the stacked mobile / reduced-motion layout)
+    var stepsProgress = function () {
+      var span = stepsScroll.offsetHeight - stepsStage.offsetHeight;
+      if (span <= 0) return -1;
+      var top = parseFloat(getComputedStyle(stepsStage).top) || 0;
+      var p = (top - stepsScroll.getBoundingClientRect().top) / span;
+      return Math.max(0, Math.min(1, p));
+    };
+
+    var updateSteps = function () {
+      stepsTicking = false;
+      var p = stepsProgress();
+      if (p < 0) return;
+      setStep(Math.min(stepCount - 1, Math.floor(p * stepCount)));
+      // the fill runs dot-to-dot, so it lands on a marker at each step's midpoint
+      var f = Math.max(0, Math.min(stepCount - 1, p * stepCount - .5)) / (stepCount - 1);
+      if (stepsFill) stepsFill.style.width = (f * 100).toFixed(2) + '%';
+    };
+
+    stepDots.forEach(function (dot, n) {
+      dot.addEventListener('click', function () {
+        var span = stepsScroll.offsetHeight - stepsStage.offsetHeight;
+        if (span <= 0) return;
+        var top = parseFloat(getComputedStyle(stepsStage).top) || 0;
+        // aim for the middle of that step's slice so it reads as settled, not mid-swap
+        var y = window.scrollY + stepsScroll.getBoundingClientRect().top - top +
+          ((n + .5) / stepCount) * span;
+        window.scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    });
+
     window.addEventListener('scroll', function () {
-      if (!ticking) { requestAnimationFrame(updateParallax); ticking = true; }
+      if (!stepsTicking) { requestAnimationFrame(updateSteps); stepsTicking = true; }
     }, { passive: true });
-    window.addEventListener('resize', updateParallax);
-    updateParallax();
+    window.addEventListener('resize', updateSteps);
+    updateSteps();
   }
 
 })();

@@ -101,7 +101,7 @@ h2 {
 }
 
 .sec-tight {
-  padding: 72px 0
+  padding: 72px;
 }
 
 .divider {
@@ -121,14 +121,13 @@ main>section:nth-of-type(odd) {
 main>section:nth-of-type(odd)::after {
   content: "";
   position: absolute;
-  inset: -60px 0;
+  inset: 0;
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   opacity: .1;
   mix-blend-mode: luminosity;
   filter: blur(3px);
-  transform: translateY(var(--bg-shift, 0px));
-  will-change: transform;
   pointer-events: none;
   z-index: 0;
 }
@@ -202,13 +201,15 @@ header {
   align-items: center
 }
 
-.nav-links a {
+/* :not(.btn) so these don't outrank .btn-gold — a class+element selector is
+   more specific than .btn-gold alone, which was greying out the CTA's label */
+.nav-links a:not(.btn) {
   color: var(--muted);
   font-size: 14.5px;
   font-weight: 500
 }
 
-.nav-links a:hover {
+.nav-links a:not(.btn):hover {
   color: var(--ink)
 }
 
@@ -487,11 +488,211 @@ header {
 }
 
 /* ---------- cards / how it works ---------- */
-.cards3 {
+/* ---------- how it works: scroll-pinned steps ----------
+   .steps-scroll is deliberately much taller than the viewport; .steps-stage
+   sticks inside it, so the cards sit still on screen while that extra height
+   scrolls past. JS turns that scrolled distance into the active step. */
+.steps-scroll {
+  --stage-top: 66px;
+  /* = sticky header height */
+  --stage-h: calc(100vh - var(--stage-top));
+  /* the card grows into whatever the stage has left after the header and rail;
+     the rail then borrows this same width so the two line up */
+  --deck-h: max(240px, min(calc(var(--stage-h) - 280px), 560px));
+  --deck-w: calc(var(--deck-h) * 1.5);
+  height: calc(var(--stage-h) * 3)
+}
+
+.steps-stage {
+  position: sticky;
+  top: var(--stage-top);
+  height: var(--stage-h);
+  display: flex;
+  align-items: center
+}
+
+.steps-inner {
+  width: 100%
+}
+
+.steps-head {
+  text-align: center;
+  margin-bottom: 20px
+}
+
+.steps-head .lede {
+  margin-left: auto;
+  margin-right: auto
+}
+
+/* no padding-top here: the dots carry it instead, which keeps their circles
+   and the rail line on the same 7px centre line */
+.steps-rail {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-  margin-top: 40px
+  gap: 18px;
+  width: var(--deck-w);
+  max-width: 100%;
+  margin: 0 auto 26px
+}
+
+.steps-rail-line {
+  position: absolute;
+  top: 6px;
+  left: 16.67%;
+  right: 16.67%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line-strong)
+}
+
+.steps-rail-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+  transition: width .3s ease
+}
+
+.step-dot {
+  position: relative;
+  padding: 22px 0 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: var(--faint);
+  text-align: center;
+  cursor: pointer;
+  transition: color .25s ease
+}
+
+.step-dot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--navy-900);
+  border: 2px solid var(--line-strong);
+  transition: background .25s ease, border-color .25s ease, box-shadow .25s ease
+}
+
+.step-dot.is-active::before {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan)
+}
+
+.step-dot .k {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em
+}
+
+.step-dot .t {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--disp);
+  font-size: 15px;
+  font-weight: 500
+}
+
+.step-dot:hover {
+  color: var(--muted)
+}
+
+.step-dot.is-active {
+  color: var(--ink)
+}
+
+.steps-deck {
+  position: relative;
+  height: var(--deck-h);
+  width: var(--deck-w);
+  max-width: 100%;
+  margin: 0 auto
+}
+
+.steps-deck .card {
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column
+}
+
+/* the auto margins split the leftover height in two, pinning STEP # to the top
+   and the footnote to the bottom while the middle block floats between them */
+.steps-deck .card h3 {
+  margin-top: auto;
+  font-size: 26px
+}
+
+.steps-deck .card .meta {
+  margin-top: auto;
+  border-top: 0;
+  padding-top: 0;
+  max-width: 62%;
+  font-size: 13px
+}
+
+.steps-deck .step-k {
+  font-size: 13px
+}
+
+.steps-deck .card .hl {
+  font-size: 15px
+}
+
+.steps-deck .card ul {
+  font-size: 17px
+}
+
+/* every panel stacks in the same spot; only the active one is shown, so the
+   deck itself never moves as the steps change. Scoped to .steps-deck so these
+   win over .card's own position/transform, which are declared further down. */
+/* leaving: fade out on the spot. The transform has a 0s duration held back by
+   a delay, so the jump to its parked side happens only once it's invisible —
+   the outgoing card never appears to move. */
+.steps-deck .step-panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .3s ease, transform 0s .3s, visibility 0s .3s
+}
+
+/* each inactive panel waits on the side it belongs to — earlier steps off to
+   the left, later steps off to the right. Both directions then animate the
+   right way round on their own: stepping forward pulls the old panel further
+   left while the new one arrives from the right, and stepping back reverses
+   it, with no need to track which way we came. */
+.steps-deck .step-panel.is-prev {
+  transform: translateX(-60px)
+}
+
+.steps-deck .step-panel.is-next {
+  transform: translateX(60px)
+}
+
+/* arriving: the only animated move — slides in from its parked side while
+   fading up */
+.steps-deck .step-panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity .55s ease, transform .55s ease, visibility 0s
+}
+
+.steps-deck .step-panel.is-active:hover {
+  transform: none
 }
 
 .card {
@@ -523,12 +724,12 @@ header {
   background: var(--gold)
 }
 
-.cards3 .card:nth-child(2)::before {
+.steps-deck .step-panel:nth-child(2)::before {
   left: 50%;
   transform: translateX(-50%)
 }
 
-.cards3 .card:nth-child(3)::before {
+.steps-deck .step-panel:nth-child(3)::before {
   left: auto;
   right: 24px
 }
@@ -587,13 +788,13 @@ header {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(1px) grayscale(0.5);
+  filter: blur(1px) grayscale(0.8);
   opacity: 0;
   transition: opacity .8s ease
 }
 
 .install-media img.is-active {
-  opacity: .2
+  opacity: .25
 }
 
 .install-media::after {
@@ -601,6 +802,25 @@ header {
   position: absolute;
   inset: 0;
   background: linear-gradient(165deg, rgba(10, 26, 38, .35), rgba(10, 26, 38, .6) 65%, rgba(10, 26, 38, .8));
+}
+
+/* step cards: full-colour photo, faded left-to-right so the text stays readable
+   instead of the blurred/greyscale/low-opacity treatment used elsewhere */
+.install-fade img {
+  filter: blur(0px)
+}
+
+.install-fade img.is-active {
+  opacity: 1
+}
+
+.install-fade::after {
+  background: linear-gradient(to right,
+      rgba(10, 26, 38, .98) 0%,
+      rgba(10, 26, 38, .92) 30%,
+      rgba(10, 26, 38, .55) 55%,
+      rgba(10, 26, 38, .1) 78%,
+      rgba(10, 26, 38, 0) 100%);
 }
 
 .install-tab {
@@ -680,9 +900,77 @@ header {
   left: 28%
 }
 
-@media(max-width:900px) {
-  .cards3 {
-    grid-template-columns: 1fr
+/* narrow screens (and reduced motion) drop the pinning entirely: the stage
+   collapses to its natural height and the panels just stack down the page.
+   The JS sees a zero-length pinned span here and leaves the steps alone. */
+@media(max-width:900px),
+(prefers-reduced-motion:reduce) {
+  .steps-scroll {
+    height: auto
+  }
+
+  .steps-stage {
+    position: static;
+    height: auto;
+    display: block
+  }
+
+  .steps-rail {
+    display: none
+  }
+
+  .steps-deck {
+    display: grid;
+    gap: 22px;
+    height: auto;
+    width: auto
+  }
+
+  .steps-deck .card {
+    padding: 26px;
+    display: block
+  }
+
+  .steps-deck .card h3 {
+    margin-top: 10px;
+    font-size: 19px
+  }
+
+  .steps-deck .card .meta {
+    margin-top: 16px;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    max-width: none;
+    font-size: 11.5px
+  }
+
+  .steps-deck .card ul {
+    font-size: 15px
+  }
+
+  /* relative, not static: the panel is the card, so it has to stay the
+     containing block for its own absolutely-positioned .install-media photo —
+     otherwise every photo escapes to .steps-deck and covers the whole stack.
+     is-prev/is-next are listed so their slide offsets don't outrank this. */
+  .steps-deck .step-panel,
+  .steps-deck .step-panel.is-prev,
+  .steps-deck .step-panel.is-next,
+  .steps-deck .step-panel.is-active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition: none
+  }
+
+  .steps-head {
+    text-align: left
+  }
+
+  .steps-head .lede {
+    margin-left: 0;
+    margin-right: 0
   }
 }
 
@@ -781,6 +1069,7 @@ header {
   font-size: 13px;
   color: var(--faint);
   margin-top: 22px;
+  margin-bottom: 20px;
   max-width: 76ch
 }
 
@@ -1226,10 +1515,6 @@ footer {
     transition: none
   }
 
-  main>section:nth-of-type(odd)::after {
-    transform: none
-  }
-
   .faq p {
     transition: none
   }
@@ -1275,9 +1560,37 @@ footer {
   color: var(--gold);
 }
 
+.diagram-label {
+  margin-top: 40px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--cyan)
+}
+
 .diagram-centered {
   max-width: 620px;
-  margin: 48px auto 0
+  margin: 20px auto 0
+}
+
+/* stripes fill the rest of the section below the cards: padding-bottom adds
+   the extra striped space, and the equal negative margin cancels it back out
+   of the flow so the section's own bottom padding doesn't add on top of it —
+   the net effect is the stripes reach the section's true bottom edge */
+.stripe-zone {
+  padding: 40px 0 96px;
+  margin-bottom: -96px;
+  background-color: #142533;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M18 6L11 17H16L14 26L23 14H18L18 6Z' fill='rgba(160,200,220,.09)'/%3E%3Cpath d='M50 38L43 49H48L46 58L55 46H50L50 38Z' fill='rgba(160,200,220,.09)'/%3E%3C/svg%3E");
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+.stripe-zone>h2 {
+  text-align: center
 }
 
 .diagram {
