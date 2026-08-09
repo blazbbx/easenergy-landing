@@ -18,6 +18,7 @@
   --body: "Instrument Sans", sans-serif;
   --mono: "IBM Plex Mono", monospace;
   --maxw: 1160px;
+  --page-zoom: .9;
 }
 
 * {
@@ -36,7 +37,7 @@ body {
   font-family: var(--body);
   font-size: 16.5px;
   line-height: 1.6;
-  zoom: .9;
+  zoom: var(--page-zoom);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -516,8 +517,9 @@ header {
   --stage-top: 66px;
   /* = sticky header height */
   --stage-h: calc(100vh - var(--stage-top));
-  /* the card grows into whatever the stage has left after the header and rail;
-     the rail then borrows this same width so the two line up */
+  /* the card grows into whatever the stage has left after the header and rail,
+     capped so it always clears the pinned frame; the rail borrows this same
+     width so the two line up */
   --deck-h: max(240px, min(calc(var(--stage-h) - 280px), 560px));
   --deck-w: calc(var(--deck-h) * 1.5);
   height: calc(var(--stage-h) * 3)
@@ -943,7 +945,9 @@ header {
     display: grid;
     gap: 22px;
     height: auto;
-    width: auto
+    width: auto;
+    max-width: none;
+    aspect-ratio: auto
   }
 
   .steps-deck .card {
@@ -1756,4 +1760,489 @@ footer {
 .mode-night .dg-price .dot {
   background: var(--cyan);
   box-shadow: 0 0 10px var(--cyan)
+}
+
+/* ---------- offer form ---------- */
+.form-page {
+  padding: 54px 0 96px
+}
+
+.form-intro {
+  max-width: 820px;
+  margin: 0 auto 34px
+}
+
+.form-intro h1 {
+  font-size: clamp(32px, 4vw, 46px);
+  margin: 16px 0
+}
+
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 32px 40px 36px;
+  max-width: 820px;
+  margin: 0 auto
+}
+
+/* no border on the fieldset itself — a legend cuts a notch out of it. The
+   underlined legend gives the same separation without that artefact. */
+.fset {
+  border: 0;
+  padding: 0;
+  margin-bottom: 34px
+}
+
+.fset legend {
+  display: block;
+  width: 100%;
+  padding: 0 0 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold)
+}
+
+.field {
+  margin-bottom: 20px
+}
+
+.field:last-child {
+  margin-bottom: 0
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px
+}
+
+.lbl {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted)
+}
+
+.req {
+  color: var(--gold)
+}
+
+.opt {
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--faint)
+}
+
+.inp {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(7, 23, 34, .55);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15.5px;
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease
+}
+
+.inp::placeholder {
+  color: var(--faint)
+}
+
+.inp:focus {
+  outline: 0;
+  border-color: var(--cyan);
+  background: rgba(7, 23, 34, .8);
+  box-shadow: 0 0 0 3px rgba(62, 197, 220, .16)
+}
+
+.inp:disabled {
+  opacity: .4;
+  cursor: not-allowed
+}
+
+textarea.inp {
+  min-height: 110px;
+  line-height: 1.6;
+  resize: vertical
+}
+
+.help {
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--faint)
+}
+
+.help a {
+  color: var(--cyan)
+}
+
+/* address suggestions */
+.ac-wrap {
+  position: relative
+}
+
+.ac-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 232px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--navy-800);
+  box-shadow: 0 14px 30px rgba(4, 10, 15, .5)
+}
+
+.ac-item {
+  padding: 10px 14px;
+  font-size: 14.5px;
+  color: var(--muted);
+  cursor: pointer
+}
+
+.ac-item:hover,
+.ac-item.is-active {
+  background: var(--cyan-soft);
+  color: var(--ink)
+}
+
+/* available surface */
+.surface-list {
+  display: grid;
+  gap: 10px
+}
+
+.surface-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: border-color .2s ease, background .2s ease
+}
+
+.surface-row:has(input[type="checkbox"]:checked) {
+  border-color: rgba(62, 197, 220, .5);
+  background: var(--cyan-soft)
+}
+
+.surface-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  font-size: 16px;
+  cursor: pointer
+}
+
+.surface-main input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--cyan);
+  cursor: pointer
+}
+
+.surface-area {
+  flex: 0 0 auto;
+  width: 142px;
+  padding: 9px 12px;
+  font-size: 14px
+}
+
+/* consumption upload */
+.drop {
+  display: block;
+  position: relative;
+  padding: 30px 24px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease
+}
+
+.drop:hover {
+  border-color: var(--cyan)
+}
+
+.drop.is-over {
+  border-color: var(--cyan);
+  background: var(--cyan-soft)
+}
+
+/* clipped rather than display:none so it still takes keyboard focus */
+.drop input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap
+}
+
+.drop:has(input:focus-visible) {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(62, 197, 220, .16)
+}
+
+.drop-ic {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 12px;
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round
+}
+
+.drop-main {
+  display: block;
+  font-family: var(--disp);
+  font-size: 16px;
+  color: var(--ink)
+}
+
+.drop-sub {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--faint)
+}
+
+.file-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  list-style: none
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(7, 23, 34, .55)
+}
+
+.file-name {
+  overflow: hidden;
+  font-size: 14.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+
+.file-size {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--faint)
+}
+
+.file-clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--cyan);
+  text-decoration: underline;
+  cursor: pointer
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line)
+}
+
+.form-actions .btn {
+  padding: 15px 30px;
+  font-size: 16px
+}
+
+.form-note {
+  max-width: 46ch;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--faint)
+}
+
+@media(max-width:720px) {
+  .form-card {
+    padding: 26px 22px 28px
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0
+  }
+
+  .surface-row {
+    flex-wrap: wrap
+  }
+
+  .surface-area {
+    width: 100%
+  }
+}
+
+/* ---------- status pages (sent / failed) ---------- */
+.status-page {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 66px);
+  padding: 70px 0
+}
+
+.status-card {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center
+}
+
+/* block, not the SVG default of inline — otherwise auto margins are ignored
+   and it shares a line with the eyebrow instead of stacking above it */
+.status-mark {
+  display: block;
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 28px;
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round
+}
+
+.status-card .eyebrow {
+  display: block
+}
+
+.status-mark .ring {
+  stroke: currentColor;
+  opacity: .35;
+  stroke-dasharray: 252;
+  stroke-dashoffset: 252;
+  animation: markRing .6s ease forwards
+}
+
+.status-mark .glyph {
+  stroke: currentColor;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: markGlyph .45s ease .45s forwards
+}
+
+.status-ok {
+  color: var(--cyan)
+}
+
+.status-err {
+  color: var(--danger)
+}
+
+@keyframes markRing {
+  to {
+    stroke-dashoffset: 0
+  }
+}
+
+@keyframes markGlyph {
+  to {
+    stroke-dashoffset: 0
+  }
+}
+
+.status-card h1 {
+  font-size: clamp(30px, 3.6vw, 42px);
+  margin-bottom: 16px
+}
+
+.status-card .lede {
+  margin: 0 auto 12px;
+  font-size: 17.5px
+}
+
+.status-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px
+}
+
+.status-help {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--faint)
+}
+
+.status-help a {
+  color: var(--cyan)
+}
+
+.status-steps {
+  display: grid;
+  gap: 14px;
+  margin-top: 34px;
+  text-align: left
+}
+
+.status-step {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(15, 42, 62, .5);
+  font-size: 15px;
+  color: var(--muted)
+}
+
+.status-step b {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  color: var(--gold)
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+  .status-mark .ring,
+  .status-mark .glyph {
+    animation: none;
+    stroke-dashoffset: 0
+  }
 }

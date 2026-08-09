@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request a non-binding offer — EASENERGY</title>
+  <meta name="description"
+    content="Tell us about your site and consumption and we'll come back with a non-binding offer for solar + storage behind your meter. No cost, no commitment.">
+  <meta name="theme-color" content="#0A1F2F">
+  <meta name="robots" content="noindex">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A1F2F'/%3E%3Cg stroke='%233EC5DC' stroke-width='6' stroke-linecap='round'%3E%3Cpath d='M16 20H48M16 32H41M16 44H48'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="wm" viewBox="0 0 198 22">
+        <g fill="none" stroke="currentColor" stroke-width="2.4">
+          <path d="M0 1H13M0 11H10.5M0 21H13" />
+          <g transform="translate(23,0)">
+            <path d="M0 21L6.5 1L13 21" />
+          </g>
+          <g transform="translate(46,0)">
+            <path
+              d="M12 4C12 1.6 9.6 1 6.6 1C3.1 1 1.1 2.6 1.1 5.2C1.1 8 4 9.4 6.5 10.4C9 11.4 12 12.6 12 15.4C12 18.5 9.6 21 6.1 21C3.1 21 1 19.7 1 17.4" />
+          </g>
+          <g transform="translate(69,0)">
+            <path d="M0 1H13M0 11H10.5M0 21H13" />
+          </g>
+          <g transform="translate(92,0)">
+            <path d="M0 21V1L13 21V1" />
+          </g>
+          <g transform="translate(115,0)">
+            <path d="M0 1H13M0 11H10.5M0 21H13" />
+          </g>
+          <g transform="translate(138,0)">
+            <path d="M0 21V1H8.5C12.5 1 12.5 10 8.5 10H0M7.5 10L13 21" />
+          </g>
+          <g transform="translate(161,0)">
+            <path
+              d="M12.4 4.4C11 1.8 8.8 1 6.8 1C2.9 1 0.9 4.8 0.9 11C0.9 17.2 2.9 21 6.8 21C10.6 21 12.4 18 12.4 14H6.8" />
+          </g>
+          <g transform="translate(184,0)">
+            <path d="M0 1L6.5 11L13 1M6.5 11V21" />
+          </g>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header>
+    <div class="wrap nav">
+      <a href="index.html" class="wordmark" aria-label="EASENERGY home"><svg viewBox="0 0 198 22" role="img"
+          aria-label="EASENERGY">
+          <use href="#wm" />
+        </svg></a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="index.html" class="btn btn-ghost btn-sm">← Back to landing page</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="form-page">
+    <div class="wrap">
+      <div class="form-intro">
+        <span class="eyebrow">Non-binding offer request</span>
+        <h1>Tell us about your site</h1>
+        <p class="lede">Three things get us to a real number: where the site is, what surface is available, and how you
+          consume. Nothing here commits you to anything — we come back with an indicative offer, free of charge.</p>
+      </div>
+
+      <form id="offerForm" class="form-card">
+        <fieldset class="fset">
+          <legend>About you</legend>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="company">Company <span class="req" aria-hidden="true">*</span></label>
+              <input class="inp" type="text" id="company" name="company" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label class="lbl" for="contact">Contact person <span class="req" aria-hidden="true">*</span></label>
+              <input class="inp" type="text" id="contact" name="contact" autocomplete="name" required>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input class="inp" type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label class="lbl" for="phone">Phone <span class="opt">optional</span></label>
+              <input class="inp" type="tel" id="phone" name="phone" autocomplete="tel">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="fset">
+          <legend>The site</legend>
+
+          <div class="field">
+            <label class="lbl" for="address">Site address <span class="req" aria-hidden="true">*</span></label>
+            <div class="ac-wrap">
+              <input class="inp" type="text" id="address" name="address" autocomplete="street-address"
+                placeholder="Start typing an address…" role="combobox" aria-autocomplete="list" aria-expanded="false"
+                aria-controls="addressList" required>
+              <ul class="ac-list" id="addressList" role="listbox" aria-label="Address suggestions" hidden></ul>
+            </div>
+            <p class="help">Start typing and pick a suggestion, or just type it in. Address lookup by <a
+                href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</p>
+          </div>
+
+          <div class="field">
+            <span class="lbl" id="surfaceLabel">Available surface <span class="req" aria-hidden="true">*</span></span>
+            <div class="surface-list" role="group" aria-labelledby="surfaceLabel">
+              <div class="surface-row">
+                <label class="surface-main">
+                  <input type="checkbox" name="surface" value="roof" data-area="roofArea">
+                  <span>Roof</span>
+                </label>
+                <input class="inp surface-area" type="number" id="roofArea" name="roofArea" min="0" step="10"
+                  placeholder="approx. m²" aria-label="Approximate roof area in square metres" disabled>
+              </div>
+              <div class="surface-row">
+                <label class="surface-main">
+                  <input type="checkbox" name="surface" value="carport" data-area="carportArea">
+                  <span>Carport</span>
+                </label>
+                <input class="inp surface-area" type="number" id="carportArea" name="carportArea" min="0" step="10"
+                  placeholder="approx. m²" aria-label="Approximate carport area in square metres" disabled>
+              </div>
+              <div class="surface-row">
+                <label class="surface-main">
+                  <input type="checkbox" name="surface" value="ground" data-area="groundArea">
+                  <span>Ground-mount</span>
+                </label>
+                <input class="inp surface-area" type="number" id="groundArea" name="groundArea" min="0" step="10"
+                  placeholder="approx. m²" aria-label="Approximate ground area in square metres" disabled>
+              </div>
+            </div>
+            <p class="help">Tick everything that could work — areas are optional, a rough figure is plenty.</p>
+          </div>
+        </fieldset>
+
+        <fieldset class="fset">
+          <legend>Consumption data</legend>
+
+          <div class="field">
+            <span class="lbl" id="uploadLabel">Last 12 months of consumption</span>
+            <label class="drop" id="drop" for="dataFiles">
+              <svg class="drop-ic" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 16V4M12 4L7 9M12 4L17 9" />
+                <path d="M3 15V19A2 2 0 0 0 5 21H19A2 2 0 0 0 21 19V15" />
+              </svg>
+              <span class="drop-main">Drop your files here or <u>browse</u></span>
+              <span class="drop-sub">.csv or .xlsx · load profiles if you have them · several files are fine</span>
+              <input type="file" id="dataFiles" name="dataFiles" accept=".csv,.xlsx,.xls" multiple
+                aria-labelledby="uploadLabel">
+            </label>
+            <ul class="file-list" id="fileList"></ul>
+            <p class="help" id="fileHelp" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="fset">
+          <legend>Anything else</legend>
+
+          <div class="field">
+            <label class="lbl" for="comments">Comments <span class="opt">optional</span></label>
+            <textarea class="inp" id="comments" name="comments" rows="5"
+              placeholder="Planned expansion, shift patterns, roof age, grid connection quirks — anything that would shape the offer."></textarea>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-gold btn-offer">Send request</button>
+          <p class="form-note">We reply within a few working days. Your data is used only to prepare this offer.</p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <a href="index.html" class="wordmark" aria-label="EASENERGY"><svg viewBox="0 0 198 22" role="img"
+            aria-label="EASENERGY">
+            <use href="#wm" />
+          </svg></a>
+        <a class="btn btn-ghost btn-sm" href="index.html#contact">Get in touch</a>
+      </div>
+      <div class="legal">
+        <p>EASENERGY develops, finances, owns and operates behind-the-meter solar and battery storage for commercial and
+          industrial sites in Hungary — delivered turnkey and contracted long-term at fixed EUR prices.</p>
+        <p>The content of this page is for information only and does not constitute a contractual offer or a guarantee
+          of savings. For figures specific to your site and consumption, request a non-binding offer.</p>
+      </div>
+      <div class="copy">© 2026 EASENERGY Hungary · PV + BESS PPA solutions for commercial &amp; industrial sites</div>
+    </div>
+  </footer>
+
+  <script src="offer.js"></script>
+</body>
+
+</html>
